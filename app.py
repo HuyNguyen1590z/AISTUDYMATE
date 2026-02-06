@@ -2,17 +2,18 @@ import streamlit as st
 import os
 from google import genai
 
-# 1.Lấy API key từ Secrets
 client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
-# 2. Sửa lỗi 404 bằng cách dùng tên model cơ bản nhất
-# Không dùng 'latest' hay 'v1beta' để đảm bảo ổn định
-response = client.models.generate_content(
-    model="gemini-3-flash-preview",
-    contents=prompt
-)
+st.title("AI StudyMate")
 
-result = response.text
+prompt = st.text_input("Nhập câu hỏi:")
+
+if st.button("Hỏi AI") and prompt:
+    response = client.models.generate_content(
+        model="gemini-3-flash-preview",
+        contents=prompt
+    )
+    st.write(response.text)
 
 # 3. Giao diện ứng dụng
 st.set_page_config(page_title="AISTUDYMATE", layout="centered")
@@ -35,7 +36,10 @@ if st.button("Phân tích & Tạo lộ trình"):
                 prompt = f"Học sinh {name}, môn {subject}, điểm {score}. Khó khăn: {weakness}. Lập lộ trình 7 ngày."
                 
                 # Gọi AI
-                response = model.generate_content(prompt)
+                response = client.models.generate_content(
+    model="gemini-3-flash-preview",
+    contents=prompt
+)
                 
                 # Hiện kết quả
                 st.success(f"Lộ trình dành cho {name}:")
