@@ -1,12 +1,18 @@
 import streamlit as st
-import google.generativeai as genai
+import os
+from google import genai
 
-# 1. Cấu hình API Key mới của bạn (đuôi ...uWA0)
-genai.configure(api_key="AIzaSyDkOueYuWbSDXrtIxLFRlkGtHxo0fcyYU8")
+# 1.Lấy API key từ Secrets
+client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # 2. Sửa lỗi 404 bằng cách dùng tên model cơ bản nhất
 # Không dùng 'latest' hay 'v1beta' để đảm bảo ổn định
-model = genai.GenerativeModel('gemini-3-flash-preview')
+response = client.models.generate_content(
+    model="gemini-3-flash-preview",
+    contents=prompt
+)
+
+result = response.text
 
 # 3. Giao diện ứng dụng
 st.set_page_config(page_title="AISTUDYMATE", layout="centered")
